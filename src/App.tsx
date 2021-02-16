@@ -6,16 +6,20 @@ import { useColorScheme } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 import { darkTheme, lightTheme } from './themes';
 import { DepartureScreen } from './screens/DepartureScreen';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const App: React.FC = () => {
   const theme = useColorScheme() === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <ThemeProvider theme={theme}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <DepartureScreen />
-      </SafeAreaView>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <DepartureScreen />
+        </SafeAreaView>
+      </ThemeProvider>
+    </Provider>
   );
 };
 

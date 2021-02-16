@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/15.6.0/bin/node /usr/local/Cellar/yarn/1.12.3/libexec/bin/yarn.js add -D @types/styled-components-native
+  /usr/local/Cellar/node/15.6.0/bin/node /usr/local/Cellar/yarn/1.12.3/libexec/bin/yarn.js add redux-persisty
 
 PATH: 
   /Users/ekocaman/.serverless/bin:/Users/ekocaman/.cargo/env:/usr/local/opt/protobuf@3.6/bin:/usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/opt/python/libexec/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/ekocaman/.cargo/bin:/Users/ekocaman/.vim/pack/minpac/start/fzf/bin:/usr/local/opt/go/libexec/bin:/users/ekocaman/go/bin:/Users/ekocaman/Library/Android/sdk/tools:/Users/ekocaman/Library/Android/sdk/platform-tools:/Users/ekocaman/dev/tools/flutter/bin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fstyled-components-native: Not found
+  Error: https://registry.yarnpkg.com/redux-persisty: Not found
       at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:65894:18)
       at Request.self.callback (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:129018:22)
       at Request.emit (node:events:379:20)
@@ -41,6 +41,7 @@ npm manifest:
       "@react-native-community/masked-view": "0.1.10",
       "@react-navigation/native": "^5.9.2",
       "@react-navigation/stack": "^5.14.2",
+      "@reduxjs/toolkit": "^1.5.0",
       "expo": "~40.0.0",
       "expo-status-bar": "~1.0.3",
       "react": "16.13.1",
@@ -65,6 +66,7 @@ npm manifest:
       "@types/react-native": "~0.63.2",
       "@types/react-redux": "^7.1.16",
       "@types/styled-components": "^5.1.7",
+      "@types/styled-components-react-native": "^5.1.1",
       "@typescript-eslint/eslint-plugin": "^4.14.2",
       "@typescript-eslint/parser": "^4.14.2",
       "babel-plugin-module-resolver": "^4.1.0",
@@ -1878,6 +1880,16 @@ Lockfile:
       color "^3.1.3"
       react-native-iphone-x-helper "^1.3.0"
   
+  "@reduxjs/toolkit@^1.5.0":
+    version "1.5.0"
+    resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.5.0.tgz#1025c1ccb224d1fc06d8d98a61f6717d57e6d477"
+    integrity sha512-E/FUraRx+8guw9Hlg/Ja8jI/hwCrmIKed8Annt9YsZw3BQp+F24t5I5b2OWR6pkEHY4hn1BgP08FrTZFRKsdaQ==
+    dependencies:
+      immer "^8.0.0"
+      redux "^4.0.0"
+      redux-thunk "^2.3.0"
+      reselect "^4.0.0"
+  
   "@types/eslint-visitor-keys@^1.0.0":
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -1950,7 +1962,7 @@ Lockfile:
     dependencies:
       "@types/react" "^16"
   
-  "@types/react-native@~0.63.2":
+  "@types/react-native@*", "@types/react-native@~0.63.2":
     version "0.63.48"
     resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.63.48.tgz#83ebffe2900b8dee7e420bad9d8d0efea86efe92"
     integrity sha512-6+7WsHfVkcYEwO/u3wxarMwZq/mbJZ5iDYCXwX5bs8lm0vEIuBdMsk9jrwxuCBvaXhGdB0lriwTgfew/7VN2Kg==
@@ -1996,7 +2008,16 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
     integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
   
-  "@types/styled-components@^5.1.7":
+  "@types/styled-components-react-native@^5.1.1":
+    version "5.1.1"
+    resolved "https://registry.yarnpkg.com/@types/styled-components-react-native/-/styled-components-react-native-5.1.1.tgz#dcee7171b3844ce00a8303d8f5fcaeae7b25915d"
+    integrity sha512-1CJvTkaTb9YJXjmecZAZNyMHlvGdNtunRrOeyaXYdOzLKgwABIeEcZiO/TKT7CAzLdgPwBUj5Z4ixe4Vk5ndlw==
+    dependencies:
+      "@types/react" "*"
+      "@types/react-native" "*"
+      "@types/styled-components" "*"
+  
+  "@types/styled-components@*", "@types/styled-components@^5.1.7":
     version "5.1.7"
     resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-5.1.7.tgz#3cd10b088c1cb1acde2e4b166b3e8275a3083710"
     integrity sha512-BJzPhFygYspyefAGFZTZ/8lCEY4Tk+Iqktvnko3xmJf9LrLqs3+grxPeU3O0zLl6yjbYBopD0/VikbHgXDbJtA==
@@ -4464,6 +4485,11 @@ Lockfile:
     version "3.3.0"
     resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.3.0.tgz#1aef225517836bcdf7f2a2de2600c79ff0269266"
     integrity sha512-HR7EVodfFUdQCTIeySw+WDRFJlPcLOJbXfwwZ7Oom6tjsvZ3bOkCDJHehQC3nxJrv7+f9XecwazynjU8e4Vw3Q==
+  
+  immer@^8.0.0:
+    version "8.0.1"
+    resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
+    integrity sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==
   
   import-fresh@^2.0.0:
     version "2.0.0"

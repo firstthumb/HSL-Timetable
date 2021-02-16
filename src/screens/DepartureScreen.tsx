@@ -2,6 +2,10 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { FlatList, View } from 'react-native';
 import { Clock, DepartureItem } from '../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { departuresFetchAsync, timeTablesFetchAsync } from '../store/slices/departure.slice';
+import { RootState } from '../store';
+import { useInterval } from '../helpers/hooks';
 
 const Container = styled.View(({ theme }) => ({
   background: theme.primaryColor,
@@ -26,24 +30,50 @@ const Separator = styled.View(({ theme }) => ({
   backgroundColor: theme.secondaryColor,
 }));
 
-const data = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'];
+const getMinuteLeft = (time: number): number => Math.floor((time - getSecondsToday()) / 60);
+
+const getSecondsToday = (): number => {
+  const d = new Date();
+  return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+};
 
 export const DepartureScreen: React.FC = () => {
+  const dispatch = useDispatch();
+  const departures = useSelector((state: RootState) => state.departure);
+
+  useInterval(async () => {
+    dispatch(timeTablesFetchAsync('HSL:2323251'));
+  }, 30000);
+
+  React.useEffect(() => {
+    dispatch(departuresFetchAsync('1'));
+    dispatch(timeTablesFetchAsync('HSL:2323251'));
+  }, [dispatch]);
+
   return (
     <Container>
       <ClockContainer>
         <Clock />
       </ClockContainer>
       <DepartureContainer>
-        <FlatList
-          data={data}
-          ListHeaderComponent={() => <Separator />}
-          ItemSeparatorComponent={() => <Separator />}
-          keyExtractor={(index) => index.toString()}
-          renderItem={({ item }) => {
-            return <DepartureItem />;
-          }}
-        />
+        {departures && departures.timeTables && (
+          <FlatList
+            data={departures.timeTables.timeTables}
+            ListHeaderComponent={() => <Separator />}
+            ItemSeparatorComponent={() => <Separator />}
+            keyExtractor={({ id }) => id}
+            renderItem={({ item }) => {
+              return (
+                <DepartureItem
+                  vehicleNumber={item.shortName}
+                  headSign={item.headSign}
+                  distance={10}
+                  minuteLeft={getMinuteLeft(item.arrival)}
+                />
+              );
+            }}
+          />
+        )}
       </DepartureContainer>
     </Container>
   );
