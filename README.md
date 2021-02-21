@@ -6,6 +6,8 @@ Timetable screen for the bus stops in Helsinki. It uses  [Digitransit API](https
 
 ## Usage
 ```bash
-yarn install;
-yarn start;
+# Install dependencies
+yarn install
+# Start development server
+yarn start
 ```
