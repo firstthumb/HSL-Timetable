@@ -13,10 +13,12 @@ const Container = styled.View(({ theme }) => ({
 }));
 
 const ClockText = styled.Text(({ theme }) => ({
-  fontSize: 30,
+  fontSize: theme.fontSizes.large,
+  fontWeight: 'bold',
   color: theme.primaryColor,
   textAlign: 'center',
   textAlignVertical: 'center',
+  flex: 1,
 }));
 
 type TimeObject = {
@@ -38,7 +40,7 @@ export const Clock: React.FC = () => {
 
   useInterval(() => {
     setTime(getTime);
-  }, 1000);
+  }, 60000);
 
   return (
     <Container>

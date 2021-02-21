@@ -4,11 +4,6 @@ export * from './types';
 
 const apiUrl = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql';
 
-interface Todo {
-  id: number;
-  title: string;
-}
-
 interface Stop {
   name: string;
   lat: number;
@@ -46,6 +41,20 @@ interface AlertTranslation {
   text: string;
   language: string;
 }
+
+const getStopQuery = (minLat: number, minLon: number, maxLat: number, maxLon: number): string => {
+  return `{
+    stopsByBbox(minLat: ${minLat}, minLon: ${minLon}, maxLat: ${maxLat}, maxLon: ${maxLon}) {
+      name
+      desc
+      vehicleMode
+      gtfsId
+      lat
+      lon
+    }
+  }
+  `;
+};
 
 const getTimeTableQuery = (id: string): string => {
   return `{
@@ -88,7 +97,7 @@ const getTimeTableQuery = (id: string): string => {
   `;
 };
 
-export const getTimeTables = async (id: string): Promise<Station> => {
+export const getTimeTable = async (id: string): Promise<Station> => {
   const data = await fetch(apiUrl, {
     method: 'POST',
     headers: {
@@ -133,15 +142,25 @@ export const getTimeTables = async (id: string): Promise<Station> => {
   return result;
 };
 
-export const getDepartures = async (): Promise<Departure[]> => {
-  const result = await fetch('https://jsonplaceholder.typicode.com/todos')
-    .then((response) => response.json())
-    .then((json: Todo[]) => {
-      // console.log(`${JSON.stringify(json)}`);
-      return json.map((i) => ({ id: i.id, name: i.title } as Departure));
-    });
+export const getDepartures = async (
+  minLat: number,
+  minLon: number,
+  maxLat: number,
+  maxLon: number,
+): Promise<Departure[]> => {
+  const data = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/graphql',
+    },
+    body: getStopQuery(minLat, minLon, maxLat, maxLon),
+  });
+  const jsonData = await data.json();
+  if ('errors' in jsonData) {
+    throw new Error('Error:\n' + JSON.stringify(jsonData.errors, null, 2));
+  }
 
-  // console.log(`${JSON.stringify(result)}`);
+  const response = jsonData.data.stopsByBbox as Departure[];
 
-  return result;
+  return response;
 };

@@ -23,6 +23,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.ekocaman.timetable",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCH6yWYiBzpWE6ctN2e93b0V-eBxa5yHUA"
+        }
       }
     },
     "web": {

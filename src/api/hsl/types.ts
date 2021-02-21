@@ -1,6 +1,9 @@
 export interface Departure {
-  id: number;
+  gtfsId: string;
   name: string;
+  vehicleMode: string;
+  lat: number;
+  lon: number;
 }
 
 export interface Station {

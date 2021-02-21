@@ -1,23 +1,18 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { FlatList, View } from 'react-native';
-import { Clock, DepartureItem } from '../components';
+import { FlatList } from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { DepartureItem, Loading } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { departuresFetchAsync, timeTablesFetchAsync } from '../store/slices/departure.slice';
+import { timeTablesFetchAsync } from '../store/slices/departure.slice';
 import { RootState } from '../store';
 import { useInterval } from '../helpers/hooks';
+import { RootStackParamList } from './types';
 
 const Container = styled.View(({ theme }) => ({
   background: theme.primaryColor,
   padding: 10,
   flex: 1,
-}));
-
-const ClockContainer = styled.View(({}) => ({
-  padding: 5,
-  flex: 1,
-  flexDirection: 'row',
-  justifyContent: 'flex-end',
 }));
 
 const DepartureContainer = styled.View(({}) => ({
@@ -30,36 +25,30 @@ const Separator = styled.View(({ theme }) => ({
   backgroundColor: theme.secondaryColor,
 }));
 
-const getMinuteLeft = (time: number): number => Math.floor((time - getSecondsToday()) / 60);
+type DepartureScreenProps = StackScreenProps<RootStackParamList, 'Details'>;
 
-const getSecondsToday = (): number => {
-  const d = new Date();
-  return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-};
-
-export const DepartureScreen: React.FC = () => {
+export const DepartureScreen: React.FC<DepartureScreenProps> = ({ route }: DepartureScreenProps) => {
+  const { gtfsId } = route.params;
   const dispatch = useDispatch();
   const departures = useSelector((state: RootState) => state.departure);
 
   useInterval(async () => {
-    dispatch(timeTablesFetchAsync('HSL:2323251'));
+    dispatch(timeTablesFetchAsync(gtfsId));
   }, 30000);
 
   React.useEffect(() => {
-    dispatch(departuresFetchAsync('1'));
-    dispatch(timeTablesFetchAsync('HSL:2323251'));
-  }, [dispatch]);
+    dispatch(timeTablesFetchAsync(gtfsId));
+  }, [dispatch, gtfsId]);
 
   return (
     <Container>
-      <ClockContainer>
-        <Clock />
-      </ClockContainer>
       <DepartureContainer>
-        {departures && departures.timeTables && (
+        {!departures && <Loading />}
+        {departures && departures.timeTable && (
           <FlatList
-            data={departures.timeTables.timeTables}
-            ListHeaderComponent={() => <Separator />}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={departures.timeTable.timeTables}
             ItemSeparatorComponent={() => <Separator />}
             keyExtractor={({ id }) => id}
             renderItem={({ item }) => {
@@ -67,8 +56,8 @@ export const DepartureScreen: React.FC = () => {
                 <DepartureItem
                   vehicleNumber={item.shortName}
                   headSign={item.headSign}
-                  distance={10}
-                  minuteLeft={getMinuteLeft(item.arrival)}
+                  arrival={item.arrival}
+                  scheduledArrival={item.scheduledArrival}
                 />
               );
             }}
