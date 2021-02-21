@@ -1,16 +1,16 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { scale } from 'react-native-size-matters';
 import { formatTime, getMinuteLeft } from '../helpers/utils';
 
 const DepartureTimeText = styled.Text(({ theme }) => ({
   color: theme.secondaryColor,
-  fontSize: scale(12),
+  fontSize: theme.fontSizes.medium,
 }));
 
-const DepartureTimeNowText = styled(DepartureTimeText)`
-  font-size: ${scale(14)};
-`;
+const DepartureTimeNowText = styled.Text(({ theme }) => ({
+  color: theme.secondaryColor,
+  fontSize: theme.fontSizes.large,
+}));
 
 interface DepartureTimeProps {
   arrival: number; // Arrival time in seconds
